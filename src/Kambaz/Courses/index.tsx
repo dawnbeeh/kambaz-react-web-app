@@ -1,12 +1,13 @@
+import { courses } from "../Database";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import CourseNavigation from "./Navigation";
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
 import Modules from "./Modules";
 import Home from "./Home";
-import { FaAlignJustify } from "react-icons/fa";
+import { FaAlignJustify } from "react-icons/fa6";
 import { Button, Offcanvas, ListGroup } from "react-bootstrap";
-import { useState, useEffect } from "react"; // Ensure useEffect is imported
+import { useState } from "react";
 import PeopleTable from "./People/Table";
 import { AiOutlineDashboard, AiOutlineCalendar, AiOutlineInbox } from "react-icons/ai";
 import { LiaBookSolid } from "react-icons/lia";
@@ -15,29 +16,11 @@ import { FaFlask } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 export default function Courses() {
+  const { cid } = useParams();
+  const course = courses.find((course) => course._id === cid);
+  const { pathname } = useLocation();
   const [showCourseNav, setShowCourseNav] = useState(false);
   const [showKambazNav, setShowKambazNav] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setShowCourseNav(false);
-        setShowKambazNav(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-    handleResize(); // Initial check on mount
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  // Effect to close showCourseNav when showKambazNav becomes true
-  useEffect(() => {
-    if (showKambazNav) {
-      setShowCourseNav(false); // Close course nav when Kambaz nav is opened
-    }
-  }, [showKambazNav]);
 
   return (
     <div id="wd-courses">
@@ -48,7 +31,7 @@ export default function Courses() {
             style={{ cursor: 'pointer' }}
             onClick={() => setShowKambazNav(true)}
           />
-          Course 1234
+          {course && course.name} &gt; {pathname.split("/")[4]}
         </h2>
         <Button 
           variant="light" 
@@ -61,10 +44,12 @@ export default function Courses() {
       <hr />
       
       <div className="d-flex">
+        {/* Course Navigation Sidebar - Hidden on mobile */}
         <div className="d-none d-md-block" style={{ width: "200px" }}>
           <CourseNavigation />
         </div>
 
+        {/* Main Content */}
         <div className="flex-fill">
           <Routes>
             <Route path="Home" element={<Home />} />
@@ -76,6 +61,7 @@ export default function Courses() {
         </div>
       </div>
 
+      {/* Mobile Course Navigation */}
       <div 
         className="d-md-none"
         style={{
@@ -102,6 +88,7 @@ export default function Courses() {
         </div>
       </div>
 
+      {/* Kambaz Navigation */}
       <Offcanvas 
         show={showKambazNav} 
         onHide={() => setShowKambazNav(false)}
