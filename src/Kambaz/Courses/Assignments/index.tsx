@@ -21,6 +21,22 @@ const projectData = [
   { title: "Project" },
 ];
 
+function formatCalender(dateString: string): string {
+  const date = new Date(dateString);
+  const months = ["January", "February", "March", "April", "May", "June", 
+                 "July", "August", "September", "October", "November", "December"];
+  
+  const month = months[date.getMonth()];
+  const day = date.getDate();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const ampm = hours >= 12 ? 'pm' : 'am';
+  const formattedHours = hours % 12 || 12;
+  const formattedMinutes = minutes.toString().padStart(2, '0');
+  
+  return `${month} ${day} at ${formattedHours}:${formattedMinutes}${ampm}`;
+}
+
 interface Assignment {
   _id: string;
   title: string;
@@ -37,6 +53,7 @@ export default function Assignments() {
 
   return (
     <div id="wd-assignments" className="p-3" style={{ background: "#f5f5f5", minHeight: "100vh", marginBottom: 0 }}>
+      {/* Top bar: Search + Buttons */}
       <div className="d-flex align-items-center mb-3">
         <InputGroup style={{ maxWidth: 300 }}>
           <InputGroup.Text className="bg-white border-end-0">
@@ -58,9 +75,8 @@ export default function Assignments() {
         </div>
       </div>
 
-      {/* Assignments Header */}
       <Card className="mb-0 rounded-0 rounded-top">
-        <Card.Body className="p-2 py-2">
+        <Card.Body className="p-2 pb-0">
           <div className="d-flex align-items-center">
             <MdDragIndicator className="me-2 text-secondary" />
             <span className="fw-bold">ASSIGNMENTS</span>
@@ -76,7 +92,7 @@ export default function Assignments() {
           </div>
         </Card.Body>
       </Card>
-      {/* Assignment List */}
+
       <div className="bg-white border-top-0 rounded-0" style={{ borderTop: "none" }}>
         {courseAssignments.map((assignment: Assignment) => (
           <div
@@ -87,17 +103,17 @@ export default function Assignments() {
             <MdDragIndicator className="me-3 text-secondary" />
             <AiOutlineFileText className="me-3 text-success fs-4" />
             <div className="flex-grow-1">
-              <Link
+              <Link 
                 to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
                 className="fw-bold fs-5 mb-1 text-decoration-none text-dark"
               >
                 {assignment.title}
               </Link>
               <div className="text-primary" style={{ fontSize: "0.95em" }}>
-                {assignment.module} <span className="text-secondary">| {assignment.available}</span>
+                {assignment.module} <span className="text-secondary">| {formatCalender(assignment.available)}</span>
               </div>
               <div className="text-secondary" style={{ fontSize: "0.95em" }}>
-                <span className="fw-bold">Due</span> {assignment.due} | {assignment.points} pts
+                <span className="fw-bold">Due</span> {formatCalender(assignment.due)} | {assignment.points} pts
               </div>
             </div>
             <FaCheckCircle className="text-success fs-4 ms-2" />
@@ -108,9 +124,8 @@ export default function Assignments() {
         ))}
       </div>
 
-      {/* Quizzes Section */}
       <Card className="mb-0 mt-4 rounded-0 rounded-top">
-        <Card.Body className="p-2 py-2">
+        <Card.Body className="p-2 pb-0">
           <div className="d-flex align-items-center">
             <MdDragIndicator className="me-2 text-secondary" />
             <span className="fw-bold">QUIZZES</span>
@@ -147,9 +162,8 @@ export default function Assignments() {
         ))}
       </div>
 
-      {/* Exams Section */}
       <Card className="mb-0 mt-4 rounded-0 rounded-top">
-        <Card.Body className="p-2 py-2">
+        <Card.Body className="p-2 pb-0">
           <div className="d-flex align-items-center">
             <MdDragIndicator className="me-2 text-secondary" />
             <span className="fw-bold">EXAMS</span>
@@ -186,9 +200,8 @@ export default function Assignments() {
         ))}
       </div>
 
-      {/* Project Section */}
       <Card className="mb-0 mt-4 rounded-0 rounded-top">
-        <Card.Body className="p-2 py-2">
+        <Card.Body className="p-2 pb-0">
           <div className="d-flex align-items-center">
             <MdDragIndicator className="me-2 text-secondary" />
             <span className="fw-bold">PROJECT</span>
