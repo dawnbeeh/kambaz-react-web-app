@@ -3,13 +3,13 @@ import ModulesControls from './ModulesControls';
 import { ListGroup } from 'react-bootstrap';
 import LessonControlButtons from './LessonControlButtons';
 import ModuleControlButtons from './ModuleControlButtons';
+
 import { useParams } from "react-router";
 import * as db from "../../Database";
 
 export default function Modules() {
   const { cid } = useParams();
   const modules = db.modules;
-  console.log("Modules", cid, modules);
   return (
     <div>
       <ModulesControls />
