@@ -2,7 +2,7 @@ import { courses } from "../Database";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import CourseNavigation from "./Navigation";
-import { Navigate, Route, Routes, useParams, useLocation } from "react-router";
+import { Route, Routes, useParams, useLocation } from "react-router";
 import Modules from "./Modules";
 import Home from "./Home";
 import { FaAlignJustify } from "react-icons/fa6";
@@ -46,7 +46,7 @@ export default function Courses() {
       <div className="d-flex">
         {/* Course Navigation Sidebar - Hidden on mobile */}
         <div className="d-none d-md-block" style={{ width: "200px" }}>
-          <CourseNavigation />
+          <CourseNavigation courseId={cid} />
         </div>
 
         {/* Main Content */}
@@ -84,7 +84,7 @@ export default function Courses() {
           </Button>
         </div>
         <div style={{ maxHeight: '300px', overflowY: 'auto' }}>
-          <CourseNavigation />
+          <CourseNavigation courseId={cid} />
         </div>
       </div>
 
