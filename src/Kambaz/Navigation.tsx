@@ -23,7 +23,7 @@ export default function KambazNavigation() {
         action className="bg-black border-0 text-center">
         <img src="/images/NEU.png" width="75px" alt="NEU" />
       </ListGroup.Item>
-      
+
       <ListGroup.Item as={Link} to="/Kambaz/Account" className={`text-center border-0 bg-black
             ${pathname.includes("Account") ? "bg-white text-danger" : "bg-black text-white"}`}>
         <FaRegCircleUser className={`fs-1 ${pathname.includes("Account") ? "text-danger" : "text-white"}`} />

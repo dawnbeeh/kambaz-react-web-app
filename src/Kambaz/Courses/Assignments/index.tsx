@@ -1,10 +1,12 @@
-import { FaSearch, FaPlus, FaCheckCircle } from "react-icons/fa";
+import { FaSearch, FaPlus, FaCheckCircle, FaTrash } from "react-icons/fa";
+import { FaPencil } from "react-icons/fa6";
 import { MdDragIndicator } from "react-icons/md";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { AiOutlineFileText } from "react-icons/ai";
 import { Button, InputGroup, FormControl, Card } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
-import * as db from "../../Database";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment } from "./reducer";
 
 const quizData = [
   { title: "Q1 - HTML" },
@@ -21,7 +23,7 @@ const projectData = [
   { title: "Project" },
 ];
 
-function formatCalender(dateString: string): string {
+function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const months = ["January", "February", "March", "April", "May", "June", 
                  "July", "August", "September", "October", "November", "December"];
@@ -49,7 +51,26 @@ interface Assignment {
 
 export default function Assignments() {
   const { cid } = useParams();
-  const courseAssignments = db.assignments.filter((assignment: Assignment) => assignment.course === cid);
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const dispatch = useDispatch();
+  const courseAssignments = assignments.filter((assignment: Assignment) => assignment.course === cid);
+
+  console.log("Assignments component rendered");
+  console.log("Course ID:", cid);
+  console.log("All assignments:", assignments);
+  console.log("Course assignments:", courseAssignments);
+  console.log("Current user:", currentUser);
+
+  const handleDeleteAssignment = (assignmentId: string) => {
+    console.log("handleDeleteAssignment called with:", assignmentId);
+    const result = window.confirm("Are you sure you want to remove this assignment?");
+    console.log("User confirmed:", result);
+    if (result) {
+      console.log("Dispatching deleteAssignment");
+      dispatch(deleteAssignment(assignmentId));
+    }
+  };
 
   return (
     <div id="wd-assignments" className="p-3" style={{ background: "#f5f5f5", minHeight: "100vh", marginBottom: 0 }}>
@@ -69,12 +90,17 @@ export default function Assignments() {
           <Button variant="outline-secondary" className="fw-bold d-flex align-items-center">
             <FaPlus className="me-1" /> Group
           </Button>
-          <Button variant="danger" className="fw-bold d-flex align-items-center">
-            <FaPlus className="me-1" /> Assignment
-          </Button>
+          {currentUser.role === "FACULTY" && (
+            <Link to={`/Kambaz/Courses/${cid}/Assignments/new`}>
+              <Button variant="danger" className="fw-bold d-flex align-items-center">
+                <FaPlus className="me-1" /> Assignment
+              </Button>
+            </Link>
+          )}
         </div>
       </div>
 
+      {/* Assignments Header */}
       <Card className="mb-0 rounded-0 rounded-top">
         <Card.Body className="p-2 pb-0">
           <div className="d-flex align-items-center">
@@ -93,6 +119,7 @@ export default function Assignments() {
         </Card.Body>
       </Card>
 
+      {/* Assignment List */}
       <div className="bg-white border-top-0 rounded-0" style={{ borderTop: "none" }}>
         {courseAssignments.map((assignment: Assignment) => (
           <div
@@ -110,12 +137,32 @@ export default function Assignments() {
                 {assignment.title}
               </Link>
               <div className="text-primary" style={{ fontSize: "0.95em" }}>
-                {assignment.module} <span className="text-secondary">| {formatCalender(assignment.available)}</span>
+                {assignment.module} <span className="text-secondary">| {formatDate(assignment.available)}</span>
               </div>
               <div className="text-secondary" style={{ fontSize: "0.95em" }}>
-                <span className="fw-bold">Due</span> {formatCalender(assignment.due)} | {assignment.points} pts
+                <span className="fw-bold">Due</span> {formatDate(assignment.due)} | {assignment.points} pts
               </div>
             </div>
+            
+            {/* Control Buttons */}
+            {currentUser.role === "FACULTY" && (
+              <div className="float-end d-flex align-items-center">
+                <Link to={`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`} className="text-decoration-none">
+                  <FaPencil className="text-primary me-3" style={{ cursor: "pointer" }} />
+                </Link>
+                <FaTrash 
+                  className="text-danger me-3" 
+                  style={{ cursor: "pointer" }}
+                  onClick={(e) => {
+                    console.log("Trash icon clicked!");
+                    e.preventDefault();
+                    e.stopPropagation();
+                    handleDeleteAssignment(assignment._id);
+                  }}
+                />
+              </div>
+            )}
+            
             <FaCheckCircle className="text-success fs-4 ms-2" />
             <Button variant="light" size="sm" className="ms-2 p-1">
               <BsThreeDotsVertical />
@@ -124,6 +171,7 @@ export default function Assignments() {
         ))}
       </div>
 
+      {/* Quizzes Section */}
       <Card className="mb-0 mt-4 rounded-0 rounded-top">
         <Card.Body className="p-2 pb-0">
           <div className="d-flex align-items-center">
@@ -162,6 +210,7 @@ export default function Assignments() {
         ))}
       </div>
 
+      {/* Exams Section */}
       <Card className="mb-0 mt-4 rounded-0 rounded-top">
         <Card.Body className="p-2 pb-0">
           <div className="d-flex align-items-center">
@@ -200,6 +249,7 @@ export default function Assignments() {
         ))}
       </div>
 
+      {/* Project Section */}
       <Card className="mb-0 mt-4 rounded-0 rounded-top">
         <Card.Body className="p-2 pb-0">
           <div className="d-flex align-items-center">
