@@ -5,6 +5,7 @@ import { addAssignment, updateAssignment } from "./reducer";
 import { useState, useEffect } from "react";
 import * as assignmentsClient from "./client";
 
+// DONE(A2): 2.4.8 - Styling Edit Assignment Screen (On Your Own)
 interface Assignment {
   _id: string;
   title: string;

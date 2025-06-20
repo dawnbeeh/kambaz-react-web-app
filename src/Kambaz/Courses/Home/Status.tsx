@@ -6,6 +6,8 @@ import { LiaFileImportSolid } from "react-icons/lia";
 import { FaHome, FaStream, FaBullhorn, FaChartBar, FaBell } from "react-icons/fa";
 
 export default function CourseStatus() {
+  // DONE(A2): 1.4.6 Restyle the Course Status
+  // DONE(A2): 2.4.5 Styling the Home Screen 
   return (
     <div id="wd-course-status">
       <h2>Course Status</h2>

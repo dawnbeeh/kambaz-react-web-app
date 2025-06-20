@@ -1,6 +1,7 @@
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
 import { Button, Dropdown } from "react-bootstrap";
+// DONE(A2): 2.4.4 Custom module controls
 import ModuleEditor from "./ModuleEditor";
 import { useState } from "react";
 export default function ModulesControls(

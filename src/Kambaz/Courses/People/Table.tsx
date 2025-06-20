@@ -1,9 +1,11 @@
 import { Table, Button, Modal, Form, Row, Col } from "react-bootstrap";
 import { FaUserCircle, FaPlus, FaEdit, FaTrash } from "react-icons/fa";
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+// import { useParams } from "react-router-dom";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import * as usersClient from "./client";
+import PeopleDetails from "./Details";
+import { Link } from "react-router-dom";
 
 interface User {
     _id: string;
@@ -18,10 +20,10 @@ interface User {
     email?: string;
 }
 
-export default function PeopleTable() {
-    const { cid } = useParams();
+export default function PeopleTable({ users = [] }: { users?: any[] }) {
+    // const { cid } = useParams();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
-    const [users, setUsers] = useState<User[]>([]);
+    // const [users, setUsers] = useState<User[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [editingUser, setEditingUser] = useState<User | null>(null);
     const [formData, setFormData] = useState<Partial<User>>({
@@ -36,18 +38,18 @@ export default function PeopleTable() {
         totalActivity: ""
     });
 
-    const fetchUsers = async () => {
-        try {
-            const courseUsers = await usersClient.findUsersForCourse(cid as string);
-            setUsers(courseUsers);
-        } catch (error) {
-            console.error("Failed to fetch users:", error);
-        }
-    };
+    // const fetchUsers = async () => {
+    //     try {
+    //         const courseUsers = await usersClient.findUsersForCourse(cid as string);
+    //         // setUsers(courseUsers);
+    //     } catch (error) {
+    //         console.error("Failed to fetch users:", error);
+    //     }
+    // };
 
-    useEffect(() => {
-        fetchUsers();
-    }, [cid]);
+    // useEffect(() => {
+    //     fetchUsers();
+    // }, [cid]);
 
     const handleCreateUser = () => {
         setEditingUser(null);
@@ -75,7 +77,7 @@ export default function PeopleTable() {
         if (window.confirm("Are you sure you want to delete this user?")) {
             try {
                 await usersClient.deleteUser(userId);
-                fetchUsers();
+                // fetchUsers();
             } catch (error) {
                 console.error("Failed to delete user:", error);
             }
@@ -90,7 +92,7 @@ export default function PeopleTable() {
                 await usersClient.createUser(formData);
             }
             setShowModal(false);
-            fetchUsers();
+            // fetchUsers();
         } catch (error) {
             console.error("Failed to save user:", error);
         }
@@ -100,6 +102,7 @@ export default function PeopleTable() {
 
     return (
         <div id="wd-people-table">
+            <PeopleDetails />
             {isFaculty && (
                 <div className="mb-3">
                     <Button variant="primary" onClick={handleCreateUser}>
@@ -125,9 +128,11 @@ export default function PeopleTable() {
                     {users.map((user: User) => (
                         <tr key={user._id}>
                             <td className="wd-full-name text-nowrap">
-                                <FaUserCircle className="me-2 fs-1 text-secondary" />
-                                <span className="wd-first-name">{user.firstName}</span>{" "}
-                                <span className="wd-last-name">{user.lastName}</span>
+                                <Link to={`/Kambaz/Account/Users/${user._id}`} className="text-decoration-none">
+                                    <FaUserCircle className="me-2 fs-1 text-secondary" />
+                                    <span className="wd-first-name">{user.firstName}</span>{" "}
+                                    <span className="wd-last-name">{user.lastName}</span>
+                                </Link>
                             </td>
                             <td className="wd-login-id">{user.loginId}</td>
                             <td className="wd-section">{user.section}</td>
@@ -158,6 +163,7 @@ export default function PeopleTable() {
                 </tbody>
             </Table>
 
+            {/* User Modal */}
             <Modal show={showModal} onHide={() => setShowModal(false)} size="lg">
                 <Modal.Header closeButton>
                     <Modal.Title>{editingUser ? "Edit User" : "Create User"}</Modal.Title>

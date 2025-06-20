@@ -9,6 +9,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { setAssignments, deleteAssignment } from "./reducer";
 import * as assignmentsClient from "./client";
+// DONE(A2): 2.4.7 - Styling the Assignments Screen (On Your Own)
 
 const quizData = [
   { title: "Q1 - HTML" },
@@ -25,6 +26,7 @@ const projectData = [
   { title: "Project" },
 ];
 
+// Format date from "2024-05-06T00:00" to "May 6 at 12:00am"
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const months = ["January", "February", "March", "April", "May", "June", 
